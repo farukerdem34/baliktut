@@ -3,7 +3,7 @@ from time import sleep
 import os
 # System Conf
 SEND_MODE:int=1
-SLEEP:int=2
+SLEEP:float=0.2
 RUN:bool=True
 
 # Log Conf
