@@ -8,9 +8,14 @@ RUN:bool=store.get_global_value('RUN')
 
 
 # Log Conf
-DEFAULT_LOG_DIR:str="/home/faruk/Documents/GTA San Andreas User Files/SAMP/logs/"
-HOME_DIR="/home/faruk/Documents/AutoKeyScripts/"
-LOG_NAME:str=""
+# DEFAULT_LOG_DIR:str="/home/faruk/Documents/GTA San Andreas User Files/SAMP/logs/"
+DEFAULT_LOG_DIR:str=""
+
+# HOME_DIR="/home/faruk/Documents/AutoKeyScripts/"
+HOME_DIR=""
+
+# Optional
+# LOG_NAME:str=""
 # /timestamp ile oynamıyorsanız False yapın
 TIME_STAMP_ON=True
 
@@ -21,7 +26,8 @@ NO_YEM_MSG:str="Balık tutmadan önce balıkçı kulübesinden yem satın almal�
 LIMIT_STR:str="Yavaş salla oltayı, denizde balık bırakmadın! ((Limite ulaşıldı, biraz dinlen.))"
 
 # KDE-Connect Conf
-DEVICE_ID="2087ca79_a6d9_45cb_8136_6b2fa43eddb6"
+# DEVICE_ID="2087ca79_a6d9_45cb_8136_6b2fa43eddb6"
+DEVICE_ID=""
 
 def send_text(text:str,send_mode:int=SEND_MODE,sleep_value:int=SLEEP):
     keyboard.send_key("t")
@@ -52,7 +58,7 @@ def get_last_modified_log_file(log_dir:str=DEFAULT_LOG_DIR):
     return lmlf
 
 
-def send_msg_to_android(msg:str):
+def send_msg_to_android(msg:str,isKDECONNECT:bool=(DEVICE_ID!="")):
     cmd=f"kdeconnect-cli --device={DEVICE_ID} --ping-msg='{msg}'"
     os.system(cmd)
     return cmd
@@ -74,13 +80,13 @@ def main(run:bool=RUN):
         elif ((read_last_log_line(log_name=get_last_modified_log_file())[start_index:-2]==str(NO_YEM_MSG))): # add global env var to disable/enable script
             run=False
             msg:str='Yem Bitti'
-            cmd=f"kdeconnect-cli --device={DEVICE_ID} --ping-msg='{msg}'"
             send_msg_to_android(msg)
             quit(msg)
+        # Timestamp açmak zorundalar
         if read_last_log_line(log_name=get_last_modified_log_file())[24:-2]==LIMIT_STR:
             run=False
             msg:str='Saatlik limit doldu'
-            cmd = send_msg_to_android(msg)
+            send_msg_to_android(msg)
             quit(msg)
         
     
