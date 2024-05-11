@@ -8,14 +8,13 @@ RUN:bool=store.get_global_value('RUN')
 
 
 # Log Conf
-# DEFAULT_LOG_DIR:str="/home/faruk/Documents/GTA San Andreas User Files/SAMP/logs/"
-DEFAULT_LOG_DIR:str=""
+DEFAULT_LOG_DIR:str="/home/faruk/Documents/GTA San Andreas User Files/SAMP/logs/"
 
-# HOME_DIR="/home/faruk/Documents/AutoKeyScripts/"
-HOME_DIR=""
+HOME_DIR="/home/faruk/Documents/AutoKeyScripts/"
 
 # Optional
-# LOG_NAME:str=""
+LOG_NAME:str=""
+
 # /timestamp ile oynamıyorsanız False yapın
 TIME_STAMP_ON=True
 
@@ -26,8 +25,7 @@ NO_YEM_MSG:str="Balık tutmadan önce balıkçı kulübesinden yem satın almal�
 LIMIT_STR:str="Yavaş salla oltayı, denizde balık bırakmadın! ((Limite ulaşıldı, biraz dinlen.))"
 
 # KDE-Connect Conf
-# DEVICE_ID="2087ca79_a6d9_45cb_8136_6b2fa43eddb6"
-DEVICE_ID=""
+DEVICE_ID="2087ca79_a6d9_45cb_8136_6b2fa43eddb6"
 
 def send_text(text:str,send_mode:int=SEND_MODE,sleep_value:int=SLEEP):
     keyboard.send_key("t")
