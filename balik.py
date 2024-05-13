@@ -1,10 +1,15 @@
 # Enter script code
 from time import sleep
 import os
+from pytesseract import pytesseract
+from PIL import ImageGrab
+import string
+import re
 # System Conf
 SEND_MODE:int=1
 SLEEP:float=0.2
-RUN:bool=store.get_global_value('RUN')     
+RUN:bool=store.get_global_value('RUN') 
+TEKNE:bool=True    
 
 
 # Log Conf
@@ -24,8 +29,15 @@ NO_YEM_MSG:str="Balık tutmadan önce balıkçı kulübesinden yem satın almal�
 # Limit Conf
 LIMIT_STR:str="Yavaş salla oltayı, denizde balık bırakmadın! ((Limite ulaşıldı, biraz dinlen.))"
 
+# Kod Conf
+KOD_STR:str="Lütfen dialog ekranına belirtilen kodu giriniz."
 # KDE-Connect Conf
 DEVICE_ID="2087ca79_a6d9_45cb_8136_6b2fa43eddb6"
+
+def send_msg_to_android(msg:str,isKDECONNECT:bool=(DEVICE_ID!="")):
+    cmd=f"kdeconnect-cli --device={DEVICE_ID} --ping-msg='{msg}'"
+    os.system(cmd)
+    return cmd
 
 def send_text(text:str,send_mode:int=SEND_MODE,sleep_value:int=SLEEP):
     keyboard.send_key("t")
@@ -54,15 +66,44 @@ def get_last_modified_log_file(log_dir:str=DEFAULT_LOG_DIR):
                 lmlt=modify_time
                 lmlf=file_name
     return lmlf
+    
+def kod_gir(n:int=0):
+    n=10
+    while n>0:
+        n-=1
+        keyboard.send_key(Key.BACKSPACE)
+        sleep(0.2)
+
+    # x1,y1,x2,y2
+    ss_region = (1130, 490, 1183, 530)
+    ss_img = ImageGrab.grab(ss_region)
+    ss_img.save("/tmp/test.jpg")
+
+    control=True
+    text = str(pytesseract.image_to_string(ss_img))
+    for i in text:
+        if i not in string.digits:
+            text=text.replace(i,"")
+    
+    #regex=re.compile(r"\d\d\d\d\d\d")
+    #while control:
+    #    text = pytesseract.image_to_string(ss_img)
+    #    dialog.info_dialog(text)
+    #    r=regex.search(text)
+    #    if r is not None:
+    #        control=False
+    
+    keyboard.send_keys(text,send_mode=1)
+    sleep(0.2)
+    keyboard.send_keys(Key.ENTER)
+    sleep(0.2)
+    
+        
 
 
-def send_msg_to_android(msg:str,isKDECONNECT:bool=(DEVICE_ID!="")):
-    cmd=f"kdeconnect-cli --device={DEVICE_ID} --ping-msg='{msg}'"
-    os.system(cmd)
-    return cmd
 
 
-def main(run:bool=RUN):
+def main(run:bool=RUN,tekne:bool=TEKNE):
     if TIME_STAMP_ON:
         start_index=24
     else:
@@ -71,21 +112,37 @@ def main(run:bool=RUN):
         run=store.get_global_value('RUN')
         if not run:
             quit('Çıkış yapıldı.')
-        send_text("/baliktut")
-        sleep(29)
+        if tekne:
+            send_text("/teknebaliktut")
+            sleep(11.5)
+        else:
+            send_text("/baliktut")
+            sleep(29)
+        
         if (NO_YEM_MSG==""):
             pass
-        elif ((read_last_log_line(log_name=get_last_modified_log_file())[start_index:-2]==str(NO_YEM_MSG))): # add global env var to disable/enable script
+        last_line=read_last_log_line(log_name=get_last_modified_log_file())
+        if NO_YEM_MSG in last_line: # add global env var to disable/enable script
             run=False
             msg:str='Yem Bitti'
             send_msg_to_android(msg)
             quit(msg)
         # Timestamp açmak zorundalar
-        if read_last_log_line(log_name=get_last_modified_log_file())[24:-2]==LIMIT_STR:
+        elif LIMIT_STR in last_line:
             run=False
             msg:str='Saatlik limit doldu'
             send_msg_to_android(msg)
             quit(msg)
+        elif KOD_STR in last_line:
+            kod_gir()
+            last_line=read_last_log_line(log_name=get_last_modified_log_file())
+            if "Kodu hatalı girdiniz, lütfen doğru bir şekilde tekrar girin." in last_line:
+                #if n>=5:
+                run=False
+                msg='Kod Girilmedi'
+                send_msg_to_android(msg)
+                quit(msg)
+            sleep(11.5)
         
     
 main()
