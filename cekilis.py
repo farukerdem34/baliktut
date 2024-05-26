@@ -24,6 +24,7 @@ DEVICE_ID="2087ca79_a6d9_45cb_8136_6b2fa43eddb6"
 
 def send_text(text:str,send_mode:int=SEND_MODE,sleep_value:int=SLEEP):
     keyboard.send_key("t")
+    sleep(sleep_value)
     keyboard.send_keys(text,send_mode=send_mode)
     sleep(sleep_value)
     keyboard.send_key(Key.ENTER)
