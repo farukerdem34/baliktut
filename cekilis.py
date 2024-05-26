@@ -8,19 +8,20 @@ SEND_MODE:int=1
 SLEEP:float=0.2
 RUN:bool=store.get_global_value('RUN')     
 # Log Conf
-DEFAULT_LOG_DIR:str="/home/faruk/Documents/GTA San Andreas User Files/SAMP/logs/"
+DEFAULT_LOG_DIR:str=os.getenv("DEFAULT_LOG_DIR")
 
-HOME_DIR="/home/faruk/Documents/AutoKeyScripts/"
+HOME_DIR=os.getenv("HOME_DIR")
 
 # Optional
 LOG_NAME:str=""
 
 # /timestamp ile oynamıyorsanız False yapın
-TIME_STAMP_ON=True
+TIME_STAMP_ON=bool(int(os.getenv("TIME_STAMP_ON")))
 
 
 # KDE-Connect Conf
-DEVICE_ID="2087ca79_a6d9_45cb_8136_6b2fa43eddb6"
+DEVICE_ID=os.getenv("DEVICE_ID")
+
 
 def send_text(text:str,send_mode:int=SEND_MODE,sleep_value:int=SLEEP):
     keyboard.send_key("t")

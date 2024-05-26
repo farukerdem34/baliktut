@@ -13,15 +13,15 @@ TEKNE:bool=True
 
 
 # Log Conf
-DEFAULT_LOG_DIR:str="/home/faruk/Documents/GTA San Andreas User Files/SAMP/logs/"
+DEFAULT_LOG_DIR:str=os.getenv("DEFAULT_LOG_DIR")
 
-HOME_DIR="/home/faruk/Documents/AutoKeyScripts/"
+HOME_DIR:str=os.getenv("/home/faruk/Documents/AutoKeyScripts/")
 
 # Optional
 LOG_NAME:str=""
 
 # /timestamp ile oynamıyorsanız False yapın
-TIME_STAMP_ON=True
+TIME_STAMP_ON:bool=bool(int(os.getenv("TIMESTAMP")))
 
 # Yem Conf
 NO_YEM_MSG:str="Balık tutmadan önce balıkçı kulübesinden yem satın almalısınız."
@@ -32,7 +32,7 @@ LIMIT_STR:str="Yavaş salla oltayı, denizde balık bırakmadın! ((Limite ulaş
 # Kod Conf
 KOD_STR:str="Lütfen dialog ekranına belirtilen kodu giriniz."
 # KDE-Connect Conf
-DEVICE_ID="2087ca79_a6d9_45cb_8136_6b2fa43eddb6"
+DEVICE_ID=os.getenv("DEVICE_ID")
 
 def send_msg_to_android(msg:str,isKDECONNECT:bool=(DEVICE_ID!="")):
     cmd=f"kdeconnect-cli --device={DEVICE_ID} --ping-msg='{msg}'"
